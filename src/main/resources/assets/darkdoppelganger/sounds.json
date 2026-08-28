@@ -1,0 +1,30 @@
+{
+  "boss_fight": {
+    "replace": true,
+    "subtitle": "subtitles.darkdoppelganger.boss_fight",
+    "sounds": [
+      { "name": "darkdoppelganger:music/boss_fight", "stream": true }
+    ]
+  },
+  "boss_laugh": {
+    "replace": true,
+    "subtitle": "subtitles.darkdoppelganger.boss_laugh",
+    "sounds": [
+      { "name": "darkdoppelganger:music/boss_laugh", "stream": false }
+    ]
+  },
+  "boss_roar": {
+    "replace": true,
+    "subtitle": "subtitles.darkdoppelganger.boss_roar",
+    "sounds": [
+      { "name": "darkdoppelganger:music/boss_roar", "stream": false }
+    ]
+  },
+  "boss_stun": {
+    "replace": true,
+    "subtitle": "subtitles.darkdoppelganger.boss_stun",
+    "sounds": [
+      { "name": "darkdoppelganger:music/boss_stun", "stream": false }
+    ]
+  }
+}

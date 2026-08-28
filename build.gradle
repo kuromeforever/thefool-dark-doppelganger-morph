@@ -1,0 +1,196 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '6.0.54'
+    id 'org.spongepowered.mixin' version '0.7.+'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+def aomProjectDir = file(findProperty('aom_project_dir') ?: '../thefool-forge-1.20.1')
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'info'
+            arg '-mixin.config=thefool_dark_doppelganger_morph.mixins.json'
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+        client {}
+        server { args '--nogui' }
+    }
+}
+
+repositories {
+    maven { url = 'https://repo.spongepowered.org/maven' }
+    maven { url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    flatDir {
+        dirs "${aomProjectDir}/libs"
+        dirs "${aomProjectDir}/libs-core"
+        dirs "${aomProjectDir}/libs-new"
+        dirs "${aomProjectDir}/libs-030"
+    }
+}
+
+configurations {
+    darkDoppelgangerContract {
+        canBeConsumed = false
+        canBeResolved = true
+        transitive = false
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    implementation fg.deobf("blank:darkdoppelganger:${dark_doppelganger_version}")
+    implementation fg.deobf("blank:irons_spellbooks-1.20.1:${irons_spellbooks_version}")
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.20.1:${geckolib_version}")
+    compileOnly files("${aomProjectDir}/build/classes/java/main")
+    compileOnly fg.deobf('blank:bettermorph:0.0.54-1.20.1-forge')
+    compileOnly fg.deobf('blank:architectury-1.20.1-forge:9.2.14')
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    darkDoppelgangerContract "blank:darkdoppelganger:${dark_doppelganger_version}"
+
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.ow2.asm:asm-tree:9.5'
+    testImplementation 'com.google.code.gson:gson:2.10.1'
+}
+
+mixin {
+    add sourceSets.main, 'thefool_dark_doppelganger_morph.refmap.json'
+    config 'thefool_dark_doppelganger_morph.mixins.json'
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    filteringCharset = 'UTF-8'
+    def replaceProperties = [
+            minecraft_version_range: minecraft_version_range,
+            forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id: mod_id,
+            mod_name: mod_name,
+            mod_license: mod_license,
+            mod_version: mod_version,
+            mod_authors: mod_authors,
+            mod_description: mod_description,
+            dark_doppelganger_version_range: dark_doppelganger_version_range,
+            age_of_mythology_version_range: age_of_mythology_version_range,
+            better_morph_version_range: better_morph_version_range,
+            irons_spellbooks_version_range: irons_spellbooks_version_range,
+            geckolib_version_range: geckolib_version_range
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('test', Test).configure {
+    useJUnitPlatform()
+    dependsOn configurations.darkDoppelgangerContract
+    dependsOn 'reobfJar'
+    systemProperty 'thefool.darkdoppelganger.contract.jar', configurations.darkDoppelgangerContract.singleFile.absolutePath
+    systemProperty 'thefool.darkdoppelganger.adapter.jar', tasks.named('jar', Jar).get().archiveFile.get().asFile.absolutePath
+    systemProperty 'thefool.darkdoppelganger.project.root', projectDir.absolutePath
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title': mod_id,
+                'Specification-Vendor': mod_authors,
+                'Specification-Version': '1',
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.jar.archiveVersion,
+                'Implementation-Vendor': mod_authors,
+                'MixinConfigs': 'thefool_dark_doppelganger_morph.mixins.json'
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
+
+tasks.register('verifyThinJar') {
+    group = 'verification'
+    description = 'Rejects embedded dependencies and unapproved Dark Doppelganger resources.'
+    dependsOn 'reobfJar'
+    doLast {
+        def artifact = tasks.named('jar', Jar).get().archiveFile.get().asFile
+        def forbiddenPrefixes = [
+                'META-INF/jarjar/',
+                'com/kurome/ageofmythology/',
+                'liushuangwuyin/bettermorph/',
+                'io/redspace/ironsspellbooks/',
+                'software/bernie/geckolib/',
+                'net/bandit/darkdoppelganger/',
+                'dev/architectury/'
+        ]
+        def approvedSourceResources = [
+                'assets/darkdoppelganger/lang/zh_cn.json',
+                'assets/darkdoppelganger/sounds.json'
+        ] as Set
+        def requiredEntries = [
+                'META-INF/mods.toml',
+                'thefool_dark_doppelganger_morph.mixins.json',
+                'assets/thefool_dark_doppelganger_morph/lang/en_us.json',
+                'assets/thefool_dark_doppelganger_morph/lang/zh_cn.json',
+                'io/github/kuromeforever/thefooldarkdoppelgangermorph/TheFoolDarkDoppelgangerMorph.class',
+                'io/github/kuromeforever/thefooldarkdoppelgangermorph/morph/DarkDoppelgangerMorphRegistration.class'
+        ] as Set
+        def violations = []
+        def entries = [] as Set
+        def seenSourceResources = [] as Set
+        def zip = new java.util.zip.ZipFile(artifact)
+        try {
+            zip.entries().each { entry ->
+                entries.add(entry.name)
+                if (forbiddenPrefixes.any { prefix -> entry.name.startsWith(prefix) }) {
+                    violations.add(entry.name)
+                }
+                if (!entry.directory && entry.name.startsWith('assets/darkdoppelganger/')) {
+                    if (approvedSourceResources.contains(entry.name)) {
+                        seenSourceResources.add(entry.name)
+                    } else {
+                        violations.add(entry.name)
+                    }
+                }
+            }
+        } finally {
+            zip.close()
+        }
+        if (!violations.isEmpty()) {
+            throw new GradleException("Thin-jar contract violated: ${violations.take(20)}")
+        }
+        if (seenSourceResources != approvedSourceResources) {
+            throw new GradleException("Source compatibility resources are incomplete: ${seenSourceResources}")
+        }
+        def missing = requiredEntries.findAll { !entries.contains(it) }
+        if (!missing.isEmpty()) {
+            throw new GradleException("Required adapter entries are missing: ${missing}")
+        }
+    }
+}
+
+tasks.named('build').configure {
+    dependsOn 'verifyThinJar'
+}

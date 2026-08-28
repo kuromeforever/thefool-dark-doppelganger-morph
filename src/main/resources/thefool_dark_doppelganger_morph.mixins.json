@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "io.github.kuromeforever.thefooldarkdoppelgangermorph.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "thefool_dark_doppelganger_morph.refmap.json",
+  "mixins": [
+    "accessor.SummonDoppelMinionSpellInvoker",
+    "compat.DarkDoppelgangerEntityLocalizationMixin",
+    "compat.DarkDoppelgangerMinionLocalizationMixin",
+    "compat.DarkDoppelgangerCommandLocalizationMixin",
+    "compat.SummonDoppelMinionSpellLocalizationMixin",
+    "compat.SummonScrollLocalizationMixin"
+  ],
+  "client": [
+    "client.DarkDoppelgangerBossBarMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
