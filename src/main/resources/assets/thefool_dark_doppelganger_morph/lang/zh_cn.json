@@ -23,6 +23,11 @@
   "message.thefool_dark_doppelganger_morph.source.minion_exists": "你已经召唤了一名镜影仆从",
   "message.thefool_dark_doppelganger_morph.source.command.none": "半径 %s 格内没有黑暗二重身实体",
   "message.thefool_dark_doppelganger_morph.source.command.removed": "已移除半径 %2$s 格内的 %1$s 个黑暗二重身实体，其中 Boss %3$s 个，分身或仆从 %4$s 个",
+  "message.thefool_dark_doppelganger_morph.source.command.no_players": "附近没有可供复制的玩家",
+  "message.thefool_dark_doppelganger_morph.source.command.error": "黑暗二重身命令执行失败",
+  "message.thefool_dark_doppelganger_morph.source.command.target_invalid": "被复制的玩家已不再有效",
+  "message.thefool_dark_doppelganger_morph.source.command.spawn_countdown": "黑暗二重身将在五秒后出现并复制 %s",
   "message.thefool_dark_doppelganger_morph.source.scroll.deprecated": "这张召唤卷轴已经废弃",
-  "message.thefool_dark_doppelganger_morph.source.scroll.no_longer_works": "这件物品已无法使用"
+  "message.thefool_dark_doppelganger_morph.source.scroll.no_longer_works": "这件物品已无法使用",
+  "pack.thefool_dark_doppelganger_morph.advancement_overrides": "黑暗二重身进度汉化"
 }

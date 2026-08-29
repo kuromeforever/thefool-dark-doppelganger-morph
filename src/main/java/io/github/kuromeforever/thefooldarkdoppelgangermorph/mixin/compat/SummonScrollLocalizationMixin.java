@@ -15,7 +15,7 @@ public abstract class SummonScrollLocalizationMixin {
             require = 1,
             remap = false
     )
-    private static MutableComponent thefoolDarkDoppelgangerMorph$translateUse(String original) {
+    private MutableComponent thefoolDarkDoppelgangerMorph$translateUse(String original) {
         return DarkDoppelgangerSourceTranslations.translateLiteral(original);
     }
 
@@ -25,7 +25,7 @@ public abstract class SummonScrollLocalizationMixin {
             require = 2,
             remap = false
     )
-    private static MutableComponent thefoolDarkDoppelgangerMorph$translateTooltip(String original) {
+    private MutableComponent thefoolDarkDoppelgangerMorph$translateTooltip(String original) {
         return DarkDoppelgangerSourceTranslations.translateLiteral(original);
     }
 }

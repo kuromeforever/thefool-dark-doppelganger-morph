@@ -23,6 +23,11 @@
   "message.thefool_dark_doppelganger_morph.source.minion_exists": "You already have a minion summoned",
   "message.thefool_dark_doppelganger_morph.source.command.none": "No Dark Doppelganger entities were found within radius %s",
   "message.thefool_dark_doppelganger_morph.source.command.removed": "Removed %s Dark Doppelganger entities within radius %s, including %s bosses and %s clones or minions",
+  "message.thefool_dark_doppelganger_morph.source.command.no_players": "No players are nearby to copy",
+  "message.thefool_dark_doppelganger_morph.source.command.error": "The Dark Doppelganger command could not be completed",
+  "message.thefool_dark_doppelganger_morph.source.command.target_invalid": "The copied player is no longer available",
+  "message.thefool_dark_doppelganger_morph.source.command.spawn_countdown": "The Dark Doppelganger will appear in five seconds and copy %s",
   "message.thefool_dark_doppelganger_morph.source.scroll.deprecated": "This summon scroll is deprecated",
-  "message.thefool_dark_doppelganger_morph.source.scroll.no_longer_works": "This item no longer works"
+  "message.thefool_dark_doppelganger_morph.source.scroll.no_longer_works": "This item no longer works",
+  "pack.thefool_dark_doppelganger_morph.advancement_overrides": "Dark Doppelganger advancement localization"
 }

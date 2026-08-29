@@ -110,6 +110,14 @@ class DarkDoppelganger982SourceContractTest {
                                 Set.of("No Dark Doppelganger entities found in radius ")),
                         new MethodContract("lambda$killDoppelgangers$4", "(IIII)Lnet/minecraft/network/chat/Component;", 1,
                                 Set.of("Removed ", " Dark Doppelganger entity(ies) in radius "))
+                ),
+                "net/bandit/darkdoppelganger/event/SummonDoppelganger", Set.of(
+                        new MethodContract("summonDoppelganger", "(Lnet/minecraft/commands/CommandSourceStack;)I", 2,
+                                Set.of("No players nearby to copy.", "An error occurred while executing the command.")),
+                        new MethodContract("lambda$summonDoppelganger$1", "(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/commands/CommandSourceStack;)V", 1,
+                                Set.of("Target player is no longer valid.")),
+                        new MethodContract("lambda$summonDoppelganger$0", "(Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/network/chat/Component;", 1,
+                                Set.of("Dark Doppelganger will spawn in 5 seconds, copying "))
                 )
         );
         try (ZipFile zip = new ZipFile(ContractTestSupport.sourceJar().toFile())) {
@@ -124,6 +132,97 @@ class DarkDoppelganger982SourceContractTest {
                             joined.contains(fragment), contract.name() + " missing " + fragment
                     ));
                 }
+            }
+        }
+    }
+
+    @Test
+    void locksEveryRedirectHandlerStaticnessAgainstItsSourceTarget() throws Exception {
+        Set<RedirectHandlerContract> contracts = Set.of(
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/entity/DarkDoppelgangerEntity", "<init>",
+                        "(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/DarkDoppelgangerEntityLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateConstructor"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/entity/DarkDoppelgangerEntity", "m_8119_", "()V",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/DarkDoppelgangerEntityLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateTick"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/entity/DarkDoppelgangerEntity", "triggerSecondPhase", "()V",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/DarkDoppelgangerEntityLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateSecondPhase"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/entity/DarkDoppelgangerEntity", "triggerThirdPhase", "()V",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/DarkDoppelgangerEntityLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateThirdPhase"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/entity/DarkDoppelgangerEntity", "summonMinions", "()V",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/DarkDoppelgangerEntityLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateBossMinions"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/entity/DarkDoppelgangerEntity", "m_6667_",
+                        "(Lnet/minecraft/world/damagesource/DamageSource;)V",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/DarkDoppelgangerEntityLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateDeath"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/entity/DarkDoppelgangerMinionEntity", "<init>",
+                        "(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/DarkDoppelgangerMinionLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateName"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/spells/SummonDoppelMinionSpell", "onServerCastComplete",
+                        "(Lnet/minecraft/world/level/Level;ILnet/minecraft/world/entity/LivingEntity;Lio/redspace/ironsspellbooks/api/magic/MagicData;Z)V",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/SummonDoppelMinionSpellLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateSpell"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/item/SummonScrollItem", "m_6225_",
+                        "(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/SummonScrollLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateUse"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/item/SummonScrollItem", "m_7373_",
+                        "(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/SummonScrollLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateTooltip"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/command/ModCommands", "killDoppelgangers",
+                        "(Lnet/minecraft/commands/CommandSourceStack;I)I",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/DarkDoppelgangerCommandLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateNone"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/command/ModCommands", "lambda$killDoppelgangers$4",
+                        "(IIII)Lnet/minecraft/network/chat/Component;",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/DarkDoppelgangerCommandLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateRemoved"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/event/SummonDoppelganger", "summonDoppelganger",
+                        "(Lnet/minecraft/commands/CommandSourceStack;)I",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/SummonDoppelgangerLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateCommandResult"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/event/SummonDoppelganger", "lambda$summonDoppelganger$1",
+                        "(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/commands/CommandSourceStack;)V",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/SummonDoppelgangerLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateInvalidTarget"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/event/SummonDoppelganger", "lambda$summonDoppelganger$0",
+                        "(Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/network/chat/Component;",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/SummonDoppelgangerLocalizationMixin",
+                        "thefoolDarkDoppelgangerMorph$translateCountdown"),
+                new RedirectHandlerContract("net/bandit/darkdoppelganger/event/ClientEvents", "onCustomizeBossBar",
+                        "(Lnet/minecraftforge/client/event/CustomizeGuiOverlayEvent$BossEventProgress;)V",
+                        "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/client/DarkDoppelgangerBossBarMixin",
+                        "thefoolDarkDoppelgangerMorph$acceptTranslatedName")
+        );
+
+        assertEquals(16, contracts.size());
+        try (ZipFile source = new ZipFile(ContractTestSupport.sourceJar().toFile());
+             ZipFile adapter = new ZipFile(ContractTestSupport.adapterJar().toFile())) {
+            for (RedirectHandlerContract contract : contracts) {
+                MethodNode sourceMethod = method(
+                        ContractTestSupport.classNode(source, contract.sourceOwner()).methods,
+                        contract.sourceMethod(),
+                        contract.sourceDescriptor()
+                );
+                assertNotNull(sourceMethod, contract.sourceOwner() + "." + contract.sourceMethod());
+
+                MethodNode handler = ContractTestSupport.classNode(adapter, contract.mixinOwner()).methods.stream()
+                        .filter(candidate -> candidate.name.equals(contract.handlerMethod()))
+                        .findFirst()
+                        .orElse(null);
+                assertNotNull(handler, contract.mixinOwner() + "." + contract.handlerMethod());
+
+                boolean sourceStatic = (sourceMethod.access & Opcodes.ACC_STATIC) != 0;
+                boolean handlerStatic = (handler.access & Opcodes.ACC_STATIC) != 0;
+                assertEquals(sourceStatic, handlerStatic,
+                        contract.mixinOwner() + "." + contract.handlerMethod()
+                                + " must match " + contract.sourceOwner() + "." + contract.sourceMethod());
             }
         }
     }
@@ -225,6 +324,15 @@ class DarkDoppelganger982SourceContractTest {
             String descriptor,
             int literalCalls,
             Set<String> literalFragments
+    ) {
+    }
+
+    private record RedirectHandlerContract(
+            String sourceOwner,
+            String sourceMethod,
+            String sourceDescriptor,
+            String mixinOwner,
+            String handlerMethod
     ) {
     }
 }

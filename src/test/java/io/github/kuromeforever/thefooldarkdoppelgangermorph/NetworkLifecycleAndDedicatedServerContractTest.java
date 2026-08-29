@@ -81,7 +81,7 @@ class NetworkLifecycleAndDedicatedServerContractTest {
         )).getAsJsonObject();
         JsonArray common = config.getAsJsonArray("mixins");
         JsonArray client = config.getAsJsonArray("client");
-        assertEquals(6, common.size());
+        assertEquals(7, common.size());
         assertEquals(1, client.size());
         assertTrue(client.toString().contains("client.DarkDoppelgangerBossBarMixin"));
         assertFalse(common.toString().contains("client."));

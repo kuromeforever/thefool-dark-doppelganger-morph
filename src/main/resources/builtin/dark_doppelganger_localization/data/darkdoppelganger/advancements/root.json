@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "darkdoppelganger:summon_scroll"
+    },
+    "title": {
+      "translate": "advancement.summon_dark_doppelganger.title"
+    },
+    "description": {
+      "translate": "advancement.summon_dark_doppelganger.description"
+    },
+    "background": "minecraft:textures/block/end_stone.png",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_scroll": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "darkdoppelganger:summon_scroll"
+          }
+        ]
+      }
+    }
+  }
+}

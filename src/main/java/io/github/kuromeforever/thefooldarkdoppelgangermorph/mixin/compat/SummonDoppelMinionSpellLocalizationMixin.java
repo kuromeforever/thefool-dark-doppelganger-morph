@@ -19,7 +19,7 @@ public abstract class SummonDoppelMinionSpellLocalizationMixin {
             require = 2,
             remap = false
     )
-    private static MutableComponent thefoolDarkDoppelgangerMorph$translateSpell(String original) {
+    private MutableComponent thefoolDarkDoppelgangerMorph$translateSpell(String original) {
         return DarkDoppelgangerSourceTranslations.translateLiteral(original);
     }
 }

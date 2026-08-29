@@ -49,7 +49,7 @@ class LocalizationContractTest {
                 "src/main/resources/assets/thefool_dark_doppelganger_morph/lang/zh_cn.json"
         );
         assertEquals(english.keySet(), chinese.keySet());
-        assertEquals(26, english.size());
+        assertEquals(31, english.size());
         for (String skill : Set.of(
                 "mirror_blade_combo", "shadow_slash", "doppel_portal",
                 "summon_doppel_minion", "life_drain"
@@ -58,6 +58,54 @@ class LocalizationContractTest {
             assertTrue(english.has("skill.thefool_dark_doppelganger_morph." + skill + ".desc"));
         }
         chinese.entrySet().forEach(entry -> assertFalse(entry.getValue().getAsString().isBlank(), entry.getKey()));
+        for (String key : Set.of(
+                "message.thefool_dark_doppelganger_morph.source.command.no_players",
+                "message.thefool_dark_doppelganger_morph.source.command.error",
+                "message.thefool_dark_doppelganger_morph.source.command.target_invalid",
+                "message.thefool_dark_doppelganger_morph.source.command.spawn_countdown",
+                "pack.thefool_dark_doppelganger_morph.advancement_overrides"
+        )) {
+            assertTrue(english.has(key), key);
+            assertTrue(chinese.has(key), key);
+        }
+    }
+
+    @Test
+    void advancementOverridesConsumeStableKeysAndPreserveSourceSemantics() throws Exception {
+        String rootPath = "data/darkdoppelganger/advancements/root.json";
+        String killPath = "data/darkdoppelganger/advancements/kill.json";
+        String overlayPrefix = "src/main/resources/builtin/dark_doppelganger_localization/";
+        try (ZipFile zip = new ZipFile(ContractTestSupport.sourceJar().toFile())) {
+            Set<String> sourceAdvancements = zip.stream()
+                    .filter(entry -> !entry.isDirectory())
+                    .map(entry -> entry.getName())
+                    .filter(name -> name.startsWith("data/darkdoppelganger/advancements/"))
+                    .collect(java.util.stream.Collectors.toSet());
+            assertEquals(Set.of(rootPath, killPath), sourceAdvancements);
+
+            assertAdvancementOverride(
+                    JsonParser.parseString(ContractTestSupport.zipText(zip, rootPath)).getAsJsonObject(),
+                    projectJson(overlayPrefix + rootPath),
+                    "advancement.summon_dark_doppelganger.title",
+                    "advancement.summon_dark_doppelganger.description"
+            );
+            assertAdvancementOverride(
+                    JsonParser.parseString(ContractTestSupport.zipText(zip, killPath)).getAsJsonObject(),
+                    projectJson(overlayPrefix + killPath),
+                    "advancement.kill_dark_doppelganger.title",
+                    "advancement.kill_dark_doppelganger.description"
+            );
+        }
+
+        String registration = ContractTestSupport.source(
+                "src/main/java/io/github/kuromeforever/thefooldarkdoppelgangermorph/compat/"
+                        + "DarkDoppelgangerLocalizationPack.java"
+        );
+        assertTrue(registration.contains("PackType.SERVER_DATA"));
+        assertTrue(registration.contains("Pack.Position.TOP"));
+        assertTrue(registration.contains("Component.translatable(PACK_TITLE_KEY)"));
+        assertTrue(registration.contains("PACK_ID,"));
+        assertTrue(registration.contains("true,"));
     }
 
     @Test
@@ -93,6 +141,7 @@ class LocalizationContractTest {
         assertTrue(mixins.contains("compat.DarkDoppelgangerEntityLocalizationMixin"));
         assertTrue(mixins.contains("compat.DarkDoppelgangerMinionLocalizationMixin"));
         assertTrue(mixins.contains("compat.DarkDoppelgangerCommandLocalizationMixin"));
+        assertTrue(mixins.contains("compat.SummonDoppelgangerLocalizationMixin"));
         assertTrue(mixins.contains("compat.SummonDoppelMinionSpellLocalizationMixin"));
         assertTrue(mixins.contains("compat.SummonScrollLocalizationMixin"));
         assertTrue(mixins.contains("client.DarkDoppelgangerBossBarMixin"));
@@ -100,5 +149,26 @@ class LocalizationContractTest {
 
     private static JsonObject projectJson(String relativePath) throws Exception {
         return JsonParser.parseString(ContractTestSupport.source(relativePath)).getAsJsonObject();
+    }
+
+    private static void assertAdvancementOverride(
+            JsonObject source,
+            JsonObject overlay,
+            String expectedTitle,
+            String expectedDescription
+    ) {
+        JsonObject display = overlay.getAsJsonObject("display");
+        assertEquals(Set.of("translate"), display.getAsJsonObject("title").keySet());
+        assertEquals(expectedTitle, display.getAsJsonObject("title").get("translate").getAsString());
+        assertEquals(Set.of("translate"), display.getAsJsonObject("description").keySet());
+        assertEquals(expectedDescription, display.getAsJsonObject("description").get("translate").getAsString());
+
+        JsonObject sourceComparable = source.deepCopy();
+        sourceComparable.getAsJsonObject("display").remove("title");
+        sourceComparable.getAsJsonObject("display").remove("description");
+        JsonObject overlayComparable = overlay.deepCopy();
+        overlayComparable.getAsJsonObject("display").remove("title");
+        overlayComparable.getAsJsonObject("display").remove("description");
+        assertEquals(sourceComparable, overlayComparable);
     }
 }

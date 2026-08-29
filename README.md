@@ -26,7 +26,7 @@
 openspec validate add-dark-doppelganger-localization-and-morph-skills --strict
 ```
 
-产物位于 `build/libs/thefool_dark_doppelganger_morph-0.1.0.jar`。完整行为边界和测试入口见 `docs/indexes/docs-index.md`。
+产物位于 `build/libs/thefool_dark_doppelganger_morph-0.1.2.jar`。完整行为边界和测试入口见 `docs/indexes/docs-index.md`。
 
 ## 许可
 

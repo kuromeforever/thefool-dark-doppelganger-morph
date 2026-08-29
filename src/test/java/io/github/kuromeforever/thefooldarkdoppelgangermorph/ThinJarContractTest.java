@@ -25,6 +25,11 @@ class ThinJarContractTest {
                 "assets/darkdoppelganger/lang/zh_cn.json",
                 "assets/darkdoppelganger/sounds.json"
         );
+        Set<String> approvedBuiltInResources = Set.of(
+                "builtin/dark_doppelganger_localization/pack.mcmeta",
+                "builtin/dark_doppelganger_localization/data/darkdoppelganger/advancements/root.json",
+                "builtin/dark_doppelganger_localization/data/darkdoppelganger/advancements/kill.json"
+        );
         try (ZipFile zip = new ZipFile(ContractTestSupport.adapterJar().toFile())) {
             List<String> entries = zip.stream()
                     .filter(entry -> !entry.isDirectory())
@@ -37,11 +42,23 @@ class ThinJarContractTest {
                     .filter(name -> name.startsWith("assets/darkdoppelganger/"))
                     .collect(java.util.stream.Collectors.toSet());
             assertEquals(approvedSourceResources, actualSourceResources);
+            Set<String> actualBuiltInResources = entries.stream()
+                    .filter(name -> name.startsWith("builtin/dark_doppelganger_localization/"))
+                    .collect(java.util.stream.Collectors.toSet());
+            assertEquals(approvedBuiltInResources, actualBuiltInResources);
             assertTrue(entries.contains("META-INF/mods.toml"));
             assertTrue(entries.contains("thefool_dark_doppelganger_morph.mixins.json"));
             assertTrue(entries.stream().anyMatch(name -> name.startsWith(
                     "io/github/kuromeforever/thefooldarkdoppelgangermorph/"
             )));
+            assertTrue(entries.contains(
+                    "io/github/kuromeforever/thefooldarkdoppelgangermorph/compat/"
+                            + "DarkDoppelgangerLocalizationPack.class"
+            ));
+            assertTrue(entries.contains(
+                    "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/"
+                            + "SummonDoppelgangerLocalizationMixin.class"
+            ));
         }
     }
 }

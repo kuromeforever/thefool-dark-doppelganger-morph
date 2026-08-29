@@ -149,13 +149,23 @@ tasks.register('verifyThinJar') {
                 'assets/darkdoppelganger/lang/zh_cn.json',
                 'assets/darkdoppelganger/sounds.json'
         ] as Set
+        def approvedBuiltInResources = [
+                'builtin/dark_doppelganger_localization/pack.mcmeta',
+                'builtin/dark_doppelganger_localization/data/darkdoppelganger/advancements/root.json',
+                'builtin/dark_doppelganger_localization/data/darkdoppelganger/advancements/kill.json'
+        ] as Set
         def requiredEntries = [
                 'META-INF/mods.toml',
                 'thefool_dark_doppelganger_morph.mixins.json',
                 'assets/thefool_dark_doppelganger_morph/lang/en_us.json',
                 'assets/thefool_dark_doppelganger_morph/lang/zh_cn.json',
+                'builtin/dark_doppelganger_localization/pack.mcmeta',
+                'builtin/dark_doppelganger_localization/data/darkdoppelganger/advancements/root.json',
+                'builtin/dark_doppelganger_localization/data/darkdoppelganger/advancements/kill.json',
                 'io/github/kuromeforever/thefooldarkdoppelgangermorph/TheFoolDarkDoppelgangerMorph.class',
-                'io/github/kuromeforever/thefooldarkdoppelgangermorph/morph/DarkDoppelgangerMorphRegistration.class'
+                'io/github/kuromeforever/thefooldarkdoppelgangermorph/morph/DarkDoppelgangerMorphRegistration.class',
+                'io/github/kuromeforever/thefooldarkdoppelgangermorph/compat/DarkDoppelgangerLocalizationPack.class',
+                'io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/SummonDoppelgangerLocalizationMixin.class'
         ] as Set
         def violations = []
         def entries = [] as Set
@@ -174,6 +184,10 @@ tasks.register('verifyThinJar') {
                         violations.add(entry.name)
                     }
                 }
+                if (!entry.directory && entry.name.startsWith('builtin/dark_doppelganger_localization/')
+                        && !approvedBuiltInResources.contains(entry.name)) {
+                    violations.add(entry.name)
+                }
             }
         } finally {
             zip.close()
@@ -183,6 +197,12 @@ tasks.register('verifyThinJar') {
         }
         if (seenSourceResources != approvedSourceResources) {
             throw new GradleException("Source compatibility resources are incomplete: ${seenSourceResources}")
+        }
+        def seenBuiltInResources = entries.findAll {
+            it.startsWith('builtin/dark_doppelganger_localization/') && !it.endsWith('/')
+        } as Set
+        if (seenBuiltInResources != approvedBuiltInResources) {
+            throw new GradleException("Built-in advancement resources are incomplete: ${seenBuiltInResources}")
         }
         def missing = requiredEntries.findAll { !entries.contains(it) }
         if (!missing.isEmpty()) {

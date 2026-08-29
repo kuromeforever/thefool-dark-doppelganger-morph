@@ -9,6 +9,7 @@
     "compat.DarkDoppelgangerEntityLocalizationMixin",
     "compat.DarkDoppelgangerMinionLocalizationMixin",
     "compat.DarkDoppelgangerCommandLocalizationMixin",
+    "compat.SummonDoppelgangerLocalizationMixin",
     "compat.SummonDoppelMinionSpellLocalizationMixin",
     "compat.SummonScrollLocalizationMixin"
   ],

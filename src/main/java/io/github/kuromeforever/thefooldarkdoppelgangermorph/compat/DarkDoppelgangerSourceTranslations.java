@@ -28,6 +28,9 @@ public final class DarkDoppelgangerSourceTranslations {
             Map.entry("Minion", PREFIX + "minion"),
             Map.entry("Dark Doppelganger Minion", "entity.darkdoppelganger.dark_doppelganger_minion"),
             Map.entry("You already have a minion summoned.", PREFIX + "minion_exists"),
+            Map.entry("No players nearby to copy.", PREFIX + "command.no_players"),
+            Map.entry("An error occurred while executing the command.", PREFIX + "command.error"),
+            Map.entry("Target player is no longer valid.", PREFIX + "command.target_invalid"),
             Map.entry("Item is depreciated.", PREFIX + "scroll.deprecated"),
             Map.entry("\u00a7dDepreciated", PREFIX + "scroll.deprecated"),
             Map.entry("\u00a77This item no longer works", PREFIX + "scroll.no_longer_works")
@@ -81,5 +84,9 @@ public final class DarkDoppelgangerSourceTranslations {
         return renderedName.startsWith("Dark Doppelganger")
                 || renderedName.startsWith(normal)
                 || renderedName.startsWith(finale);
+    }
+
+    public static MutableComponent spawnCountdown(Component copiedPlayerName) {
+        return Component.translatable(PREFIX + "command.spawn_countdown", copiedPlayerName);
     }
 }

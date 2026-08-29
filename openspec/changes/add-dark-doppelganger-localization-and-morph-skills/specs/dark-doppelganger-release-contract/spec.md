@@ -1,14 +1,22 @@
 ## ADDED Requirements
 
 ### Requirement: 精确来源和字节码合同
-验证 MUST 锁定来源 Jar SHA-256、20 个英文键、4 个声音、关键实体/法术/客户端方法描述符、四剑技名称与命中节点、私有单仆从方法和每个 literal 注入点调用次数。
+验证 MUST 锁定来源 Jar SHA-256、20 个英文键、4 个声音、2 个进度、关键实体或法术或客户端方法描述符、四剑技名称与命中节点、私有单仆从方法、每个 literal 注入点调用次数，以及每个 Redirect handler 与其来源目标方法一致的静态性。
 
 #### Scenario: 来源 Jar 漂移
 - **WHEN** 来源版本、哈希、类、描述符、动画键或注入次数变化
 - **THEN** 自动验证失败并要求重新审计，不静默放宽版本范围
 
+#### Scenario: Mixin handler 静态性漂移
+- **WHEN** 构建最终适配 Jar
+- **THEN** 每个 Redirect handler 的 `static` 修饰必须与对应来源目标方法一致，任何实例目标配静态 handler 或静态目标配实例 handler 都使自动验证失败
+
+#### Scenario: 进度展示合同漂移
+- **WHEN** 来源两个进度的路径、数量、展示字段或非展示语义变化
+- **THEN** 自动验证失败并要求重新审计覆盖文件，不得只验证四个语言键存在
+
 ### Requirement: 薄 Jar 和依赖边界
-最终 Jar MUST 不内嵌 AOM、BetterMorph、Iron's Spellbooks、GeckoLib 或 Dark Doppelganger 类，并 SHALL 仅包含批准的来源中文与声音覆盖。
+最终 Jar MUST 不内嵌 AOM、BetterMorph、Iron's Spellbooks、GeckoLib 或 Dark Doppelganger 类，并 SHALL 仅包含批准的来源中文、声音和两个进度覆盖。
 
 #### Scenario: 发布物检查
 - **WHEN** `verifyThinJar` 检查最终 reobf Jar

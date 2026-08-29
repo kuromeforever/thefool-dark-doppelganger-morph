@@ -19,7 +19,7 @@ public abstract class DarkDoppelgangerMinionLocalizationMixin {
             require = 1,
             remap = false
     )
-    private static MutableComponent thefoolDarkDoppelgangerMorph$translateName(String original) {
+    private MutableComponent thefoolDarkDoppelgangerMorph$translateName(String original) {
         return DarkDoppelgangerSourceTranslations.translateLiteral(original);
     }
 }

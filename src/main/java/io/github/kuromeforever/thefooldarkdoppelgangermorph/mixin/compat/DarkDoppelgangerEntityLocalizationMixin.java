@@ -20,7 +20,7 @@ public abstract class DarkDoppelgangerEntityLocalizationMixin {
             require = 2,
             remap = false
     )
-    private static MutableComponent thefoolDarkDoppelgangerMorph$translateConstructor(String original) {
+    private MutableComponent thefoolDarkDoppelgangerMorph$translateConstructor(String original) {
         return DarkDoppelgangerSourceTranslations.translateLiteral(original);
     }
 
@@ -30,7 +30,7 @@ public abstract class DarkDoppelgangerEntityLocalizationMixin {
             require = 1,
             remap = false
     )
-    private static MutableComponent thefoolDarkDoppelgangerMorph$translateTick(String original) {
+    private MutableComponent thefoolDarkDoppelgangerMorph$translateTick(String original) {
         return DarkDoppelgangerSourceTranslations.translateLiteral(original);
     }
 
@@ -44,7 +44,7 @@ public abstract class DarkDoppelgangerEntityLocalizationMixin {
             require = 1,
             remap = false
     )
-    private static MutableComponent thefoolDarkDoppelgangerMorph$translateSecondPhase(String original) {
+    private MutableComponent thefoolDarkDoppelgangerMorph$translateSecondPhase(String original) {
         return DarkDoppelgangerSourceTranslations.translateLiteral(original);
     }
 
@@ -58,7 +58,7 @@ public abstract class DarkDoppelgangerEntityLocalizationMixin {
             require = 2,
             remap = false
     )
-    private static MutableComponent thefoolDarkDoppelgangerMorph$translateThirdPhase(String original) {
+    private MutableComponent thefoolDarkDoppelgangerMorph$translateThirdPhase(String original) {
         return DarkDoppelgangerSourceTranslations.translateLiteral(original);
     }
 
@@ -72,7 +72,7 @@ public abstract class DarkDoppelgangerEntityLocalizationMixin {
             require = 2,
             remap = false
     )
-    private static MutableComponent thefoolDarkDoppelgangerMorph$translateBossMinions(String original) {
+    private MutableComponent thefoolDarkDoppelgangerMorph$translateBossMinions(String original) {
         return DarkDoppelgangerSourceTranslations.translateLiteral(original);
     }
 
@@ -82,7 +82,7 @@ public abstract class DarkDoppelgangerEntityLocalizationMixin {
             require = 1,
             remap = false
     )
-    private static MutableComponent thefoolDarkDoppelgangerMorph$translateDeath(String original) {
+    private MutableComponent thefoolDarkDoppelgangerMorph$translateDeath(String original) {
         return DarkDoppelgangerSourceTranslations.translateLiteral(original);
     }
 }
