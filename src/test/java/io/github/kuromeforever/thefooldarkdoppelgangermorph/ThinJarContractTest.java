@@ -2,6 +2,7 @@ package io.github.kuromeforever.thefooldarkdoppelgangermorph;
 
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipFile;
@@ -47,6 +48,13 @@ class ThinJarContractTest {
                     .collect(java.util.stream.Collectors.toSet());
             assertEquals(approvedBuiltInResources, actualBuiltInResources);
             assertTrue(entries.contains("META-INF/mods.toml"));
+            String metadata = new String(
+                    zip.getInputStream(zip.getEntry("META-INF/mods.toml")).readAllBytes(),
+                    StandardCharsets.UTF_8
+            );
+            assertTrue(metadata.contains("version=\"0.1.3\""));
+            assertTrue(metadata.contains("modId=\"bettermorph\""));
+            assertTrue(metadata.contains("versionRange=\"[0.0.54,)\""));
             assertTrue(entries.contains("thefool_dark_doppelganger_morph.mixins.json"));
             assertTrue(entries.stream().anyMatch(name -> name.startsWith(
                     "io/github/kuromeforever/thefooldarkdoppelgangermorph/"

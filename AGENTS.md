@@ -7,7 +7,7 @@
 ## 冻结边界
 
 - 本仓库是独立 BOTH 薄附属；依赖方向为附属 -> Dark Doppelganger / AOM / BetterMorph，AOM 不反向依赖本附属。
-- 目标固定为 Forge `47.4.12`、Dark Doppelganger `9.8.2-1.20.1`、AOM `0.3.1`、BetterMorph `0.0.54`、Iron's Spellbooks `3.15.6`、GeckoLib `4.8.4`。
+- 目标固定为 Forge `47.4.12`、Dark Doppelganger `9.8.2-1.20.1`、AOM `0.3.1`、BetterMorph 编译版本 `0.0.57`、BetterMorph 运行范围 `[0.0.54,)`、Iron's Spellbooks `3.15.6`、GeckoLib `4.8.4`。
 - 只通过 AOM Morph API v1.1 注册一个可玩 Boss、一个技术仆从和五主动；五主动只设置 60 tick AOM/BetterMorph 全局冷却。
 - 禁止运行时反射。私有来源状态只能使用 scoped Mixin accessor/invoker并由精确字节码合同锁定。
 - 业务结果服务端权威；客户端只投影动作，不同步普通移动、不回传命中或完成结果。

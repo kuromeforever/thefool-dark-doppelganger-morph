@@ -18,6 +18,12 @@
 ### Requirement: 薄 Jar 和依赖边界
 最终 Jar MUST 不内嵌 AOM、BetterMorph、Iron's Spellbooks、GeckoLib 或 Dark Doppelganger 类，并 SHALL 仅包含批准的来源中文、声音和两个进度覆盖。
 
+最终 Jar SHALL 声明版本 `0.1.3` 和 BetterMorph 运行范围 `[0.0.54,)`，并 SHALL 使用 BetterMorph 0.0.57 完成编译验证。
+
+#### Scenario: 当前内嵌 BetterMorph 可解析
+- **WHEN** 附属 0.1.3 与内嵌 BetterMorph 0.0.57 的 AOM 一起启动
+- **THEN** Forge 依赖检查接受 BetterMorph 版本并继续进入模组构造阶段
+
 #### Scenario: 发布物检查
 - **WHEN** `verifyThinJar` 检查最终 reobf Jar
 - **THEN** 外部类前缀、JarJar 依赖和未批准来源资源均为零，必需适配类和资源全部存在
