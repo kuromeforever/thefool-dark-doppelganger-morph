@@ -9,6 +9,7 @@ import io.github.kuromeforever.thefooldarkdoppelgangermorph.mixin.accessor.Summo
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.network.DarkDoppelgangerAction;
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.network.DarkDoppelgangerActionSessions;
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.runtime.BladeComboService;
+import io.github.kuromeforever.thefooldarkdoppelgangermorph.runtime.DarkDoppelgangerSpellSessions;
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.runtime.DarkDoppelgangerCombat;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import liushuangwuyin.bettermorph.api.PlayerIdentity;
@@ -60,10 +61,8 @@ public final class DarkDoppelgangerAbilities {
                 "shadow_slash",
                 ItemRegistry.SHADOW_ORB.get(),
                 io.redspace.ironsspellbooks.api.registry.SpellRegistry.SHADOW_SLASH::get,
-                DarkDoppelgangerAction.SHADOW_SLASH,
-                10,
                 player -> canBeginSpell(player),
-                player -> fail(player, "spell_busy")
+                player -> fail(player, "spell_condition")
         );
     }
 
@@ -72,10 +71,8 @@ public final class DarkDoppelgangerAbilities {
                 "doppel_portal",
                 ItemRegistry.ELDER_NECKLACE.get(),
                 net.bandit.darkdoppelganger.registry.SpellRegistry.DOPPEL_PORTAL::get,
-                DarkDoppelgangerAction.DOPPEL_PORTAL,
-                14,
                 player -> canBeginSpell(player),
-                player -> fail(player, "spell_busy")
+                player -> fail(player, "spell_condition")
         );
     }
 
@@ -85,14 +82,12 @@ public final class DarkDoppelgangerAbilities {
                 "summon_doppel_minion",
                 ItemRegistry.SUMMONS_NECKLACE.get(),
                 net.bandit.darkdoppelganger.registry.SpellRegistry.MINION_SPELL::get,
-                DarkDoppelgangerAction.SUMMON_DOPPEL_MINION,
-                40,
                 canSummon,
                 player -> {
                     if (hasLivingMinion(player)) {
                         fail(player, "already_has_minion");
                     } else {
-                        fail(player, "spell_busy");
+                        fail(player, "spell_condition");
                     }
                 }
         );
@@ -148,12 +143,15 @@ public final class DarkDoppelgangerAbilities {
         BladeComboService.tick(serverPlayer, executor.getAge());
     }
 
+    public static Ability additionalSpell(DarkDoppelgangerSpellCatalog.Entry entry) {
+        return sourceSpell(entry.key(), ItemRegistry.SHADOW_ORB.get(), entry::spell,
+                DarkDoppelgangerAbilities::canBeginSpell,
+                player -> fail(player, "spell_condition"));
+    }
     private static Ability sourceSpell(
             String key,
             Item icon,
             Supplier<? extends AbstractSpell> spellSupplier,
-            ResourceLocation actionId,
-            int visualDurationTicks,
             Predicate<Player> activationGuard,
             java.util.function.Consumer<Player> failure
     ) {
@@ -165,24 +163,14 @@ public final class DarkDoppelgangerAbilities {
                 return;
             }
             AbstractSpell spell = spellSupplier.get();
-            boolean started = MorphSpellCastCoordinator.cast(
-                    level,
-                    serverPlayer,
-                    spell,
-                    1,
-                    MorphSpellCastCoordinator.ExecutionMode.NATIVE_SESSION
-            );
-            if (started) {
-                DarkDoppelgangerActionSessions.start(
-                        serverPlayer,
-                        actionId,
-                        Math.min(MAX_ACTION_TICKS, Math.max(1, visualDurationTicks))
-                );
-            } else {
+            boolean started = DarkDoppelgangerSpellSessions.begin(serverPlayer, spell);
+            if (!started) {
                 fail(serverPlayer, "action_failed");
             }
         });
-        guard(ability, player -> isIdentity(player), activationGuard, failure);
+        guard(ability, player -> isIdentity(player), player -> activationGuard.test(player)
+                && player instanceof ServerPlayer serverPlayer
+                && DarkDoppelgangerSpellSessions.canBegin(serverPlayer, spellSupplier.get()), failure);
         return timeline(ability.setNotSpellingMob().setRequiresIronSpellIdle(), 1);
     }
 

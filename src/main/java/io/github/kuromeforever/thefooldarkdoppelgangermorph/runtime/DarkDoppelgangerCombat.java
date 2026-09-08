@@ -59,6 +59,7 @@ public final class DarkDoppelgangerCombat {
                 area,
                 candidate -> isValidTarget(player, candidate)
                         && player.distanceToSqr(candidate) <= radius * radius
+                        && player.hasLineOfSight(candidate)
         ));
         candidates.sort(Comparator.<LivingEntity>comparingDouble(player::distanceToSqr)
                 .thenComparing(candidate -> candidate.getUUID().toString()));

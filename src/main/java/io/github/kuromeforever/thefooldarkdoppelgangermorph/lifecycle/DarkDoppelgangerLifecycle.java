@@ -1,6 +1,6 @@
 package io.github.kuromeforever.thefooldarkdoppelgangermorph.lifecycle;
 
-import com.kurome.ageofmythology.bettermorph.impl.common.MorphSpellCastCoordinator;
+import io.github.kuromeforever.thefooldarkdoppelgangermorph.runtime.DarkDoppelgangerSpellSessions;
 import dev.architectury.event.EventResult;
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.client.DarkDoppelgangerClientActions;
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.network.DarkDoppelgangerActionSessions;
@@ -33,19 +33,26 @@ public final class DarkDoppelgangerLifecycle {
         }
         MinecraftForge.EVENT_BUS.register(INSTANCE);
         IdentitySwapCallback.EVENT.register((player, newIdentity) -> {
-            clear(player);
+            identityChanging(player, newIdentity);
             return EventResult.pass();
         });
         IdentityChangedCallback.EVENT.register((player, newIdentity) -> {
-            clear(player);
+            identityChanging(player, newIdentity);
             return EventResult.pass();
         });
         initialized = true;
     }
 
+    @SubscribeEvent(priority = net.minecraftforge.eventbus.api.EventPriority.LOWEST)
+    public void onSpellStart(io.redspace.ironsspellbooks.api.events.SpellPreCastEvent event) {
+        if (!event.isCanceled() && event.getEntity() instanceof ServerPlayer player)
+            DarkDoppelgangerSpellSessions.observeForeignStart(player);
+    }
+
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
+            DarkDoppelgangerSpellSessions.tick(event.getServer());
             DarkDoppelgangerActionSessions.tick(event.getServer());
         }
     }
@@ -54,6 +61,7 @@ public final class DarkDoppelgangerLifecycle {
     public void onServerAboutToStart(ServerAboutToStartEvent event) {
         DarkDoppelgangerActionSessions.beginServerSession();
         BladeComboService.clearAll();
+        DarkDoppelgangerSpellSessions.clearAll();
     }
 
     @SubscribeEvent
@@ -106,13 +114,21 @@ public final class DarkDoppelgangerLifecycle {
     public void onServerStopping(ServerStoppingEvent event) {
         DarkDoppelgangerActionSessions.clearAll();
         BladeComboService.clearAll();
+        DarkDoppelgangerSpellSessions.clearAll();
+    }
+
+    private static void identityChanging(net.minecraft.world.entity.player.Player player,
+            net.minecraft.world.entity.LivingEntity next) {
+        if (player instanceof ServerPlayer) clear(player);
+        else if (player != null && player.level().isClientSide) DistExecutor.unsafeRunWhenOn(
+                Dist.CLIENT, () -> () -> DarkDoppelgangerClientActions.identityChanging(player, next));
     }
 
     private static void clear(net.minecraft.world.entity.player.Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
             BladeComboService.clear(serverPlayer.getUUID());
             DarkDoppelgangerActionSessions.clearPlayer(serverPlayer.getServer(), serverPlayer.getUUID());
-            MorphSpellCastCoordinator.cancel(serverPlayer);
+            DarkDoppelgangerSpellSessions.clear(serverPlayer);
         } else if (player != null && player.level().isClientSide) {
             DistExecutor.unsafeRunWhenOn(
                     Dist.CLIENT,

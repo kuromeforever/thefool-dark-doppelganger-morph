@@ -33,7 +33,8 @@ public final class DarkDoppelgangerAction {
     }
 
     public static boolean isKnown(ResourceLocation actionId) {
-        return actionId != null && ALL.contains(actionId);
+        return actionId != null && (ALL.contains(actionId) ||
+                io.github.kuromeforever.thefooldarkdoppelgangermorph.morph.DarkDoppelgangerSpellCatalog.contains(actionId));
     }
 
     public static String animation(ResourceLocation actionId) {

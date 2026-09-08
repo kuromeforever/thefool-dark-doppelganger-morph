@@ -1,33 +1,14 @@
 # 愚者：黑暗二重身适配
 
-面向 Minecraft Forge 1.20.1 的独立 BOTH 附属，为 Dark Doppelganger `9.8.2-1.20.1` 提供：
+Forge 1.20.1 独立 BOTH 薄附属，当前版本 `0.1.4`。
 
-- 来源 20 个语言键、4 个派生实体名、4 个声音字幕和全部已知游戏内硬编码文案的简体中文；
-- `darkdoppelganger:dark_doppelganger` BetterMorph 可玩身份；
-- 镜刃四式、暗影斩击、镜界跃迁、召唤镜影仆从、生命汲取五个主动技能；
-- 本人和观察者可见的来源 GeckoLib 动作投影；
-- 精确来源 Jar、Mixin、动作协议和 thin Jar 自动合同。
+- 补齐来源游戏内简体中文、字幕、进度和命令提示。
+- 注册一个可玩黑暗二重身、一个技术仆从和 26 个主动技能。
+- 修复首次预览/变身出生状态，按来源施法阶段同步本人和观察者动作。
+- 真实 Boss 的出生、AI、阶段、奖励和来源持久仆从保持来源所有权。
 
-## 依赖
+完整依赖范围以 `META-INF/mods.toml` 为准。新增 Travel Optics 6.3.0-1.20.1 或兼容后续版本。AOM 必须包含本轮 NativeSession 收据 API，与附属成对发布。来源 Curios、Caelus 和 PlayerAnimator 仍由整合包提供，不内嵌第三方 Jar、模型或动画。
 
-- Minecraft 1.20.1、Forge 47.4.12+
-- Dark Doppelganger 9.8.2-1.20.1
-- The Fool / Age of Mythology 0.3.1
-- BetterMorph 0.0.54
-- Iron's Spellbooks 3.15.6
-- GeckoLib 4.8.4
+来源和架构事实以 [AOM 权威文档](../thefool-forge-1.20.1/docs/thefool/thefool_dark_doppelganger_morph/[import-thefool_dark_doppelganger_morph]黑暗二重身汉化与变身适配架构审计.md) 为准。构建见 [QA 命令](docs/ai/qa-commands.md)，产物为 `build/libs/thefool_dark_doppelganger_morph-0.1.4.jar`。自动验证不替代 [实机验收](docs/实机验收清单.md)。
 
-来源模组自己的 Curios、Caelus 和 PlayerAnimator 依赖仍须由整合包提供。本附属不会内嵌或修改任何第三方 Jar。
-
-## 构建
-
-```powershell
-.\gradlew.bat --no-daemon clean test build
-openspec validate add-dark-doppelganger-localization-and-morph-skills --strict
-```
-
-产物位于 `build/libs/thefool_dark_doppelganger_morph-0.1.2.jar`。完整行为边界和测试入口见 `docs/indexes/docs-index.md`。
-
-## 许可
-
-本仓自有代码与资源保留全部权利。Dark Doppelganger 的名称、类型和被兼容接口属于上游，MIT 声明见 `THIRD_PARTY_NOTICES.md`。
+自有代码与资源保留全部权利。来源 MIT 声明见 `THIRD_PARTY_NOTICES.md`。

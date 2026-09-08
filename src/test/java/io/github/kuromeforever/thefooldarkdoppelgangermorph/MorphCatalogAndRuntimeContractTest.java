@@ -16,12 +16,15 @@ class MorphCatalogAndRuntimeContractTest {
             "src/main/java/io/github/kuromeforever/thefooldarkdoppelgangermorph/morph/DarkDoppelgangerAbilities.java";
 
     @Test
-    void registersOnePlayableBossOneTechnicalMinionAndExactlyFiveSkills() throws Exception {
+    void registersOnePlayableBossOneTechnicalMinionAndExactlyTwentySixSkills() throws Exception {
         String source = ContractTestSupport.source(REGISTRATION);
         assertTrue(source.contains("MorphApiVersion.V1_1"));
         assertTrue(source.contains("BOSS_ID = source(\"dark_doppelganger\")"));
         assertTrue(source.contains("MINION_ID = source(\"dark_doppelganger_minion\")"));
-        assertEquals(5, count(source, ".ability("));
+        assertEquals(6, count(source, ".ability("));
+        String catalog = ContractTestSupport.source("src/main/java/io/github/kuromeforever/thefooldarkdoppelgangermorph/morph/DarkDoppelgangerSpellCatalog.java");
+        assertEquals(21, count(catalog, "new Entry("));
+        assertTrue(source.contains("DarkDoppelgangerSpellCatalog.ADDITIONS"));
         assertEquals(1, count(source, ".identity("));
         assertEquals(1, count(source, ".technicalIdentity()"));
         for (String skill : Set.of(
@@ -35,7 +38,7 @@ class MorphCatalogAndRuntimeContractTest {
     }
 
     @Test
-    void allFiveSkillsUseOnlyTheAomSixtyTickGlobalCooldown() throws Exception {
+    void allSkillsUseOnlyTheAomSixtyTickGlobalCooldown() throws Exception {
         String abilities = ContractTestSupport.source(ABILITIES);
         assertTrue(abilities.contains("GLOBAL_ABILITY_COOLDOWN_TICKS = 3 * 20"));
         assertTrue(abilities.contains("MAX_ACTION_TICKS = 3 * 20"));
@@ -79,8 +82,9 @@ class MorphCatalogAndRuntimeContractTest {
         assertTrue(abilities.contains("api.registry.SpellRegistry.SHADOW_SLASH::get"));
         assertTrue(abilities.contains("registry.SpellRegistry.DOPPEL_PORTAL::get"));
         assertTrue(abilities.contains("registry.SpellRegistry.MINION_SPELL::get"));
-        assertEquals(1, count(abilities, "MorphSpellCastCoordinator.cast("));
-        assertTrue(abilities.contains("MorphSpellCastCoordinator.ExecutionMode.NATIVE_SESSION"));
+        String nativeSessions = ContractTestSupport.source("src/main/java/io/github/kuromeforever/thefooldarkdoppelgangermorph/runtime/DarkDoppelgangerSpellSessions.java");
+        assertEquals(1, count(nativeSessions, "MorphSpellCastCoordinator.cast("));
+        assertTrue(nativeSessions.contains("MorphSpellCastCoordinator.ExecutionMode.NATIVE_SESSION"));
         assertTrue(abilities.contains("SummonDoppelMinionSpellInvoker.thefoolDarkDoppelgangerMorph$hasLivingMinion"));
         assertFalse(abilities.contains("PlayerMinionUUID"));
         assertFalse(abilities.contains("addFreshEntity"));

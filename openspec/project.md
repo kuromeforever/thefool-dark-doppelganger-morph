@@ -8,8 +8,8 @@
 
 ## 边界
 
-- 本附属单向依赖 Dark Doppelganger、AOM、BetterMorph、Iron's Spellbooks 与 GeckoLib。
-- AOM 拥有 Morph API、轮盘、调度和唯一玩家冷却；附属拥有来源适配、五技能、汉化和来源合同。
+- 本附属单向依赖 Dark Doppelganger、AOM、BetterMorph、Iron's Spellbooks、GeckoLib 与 Travel Optics。
+- AOM 拥有 Morph API、轮盘、调度、唯一玩家冷却和原生会话凭证；附属拥有来源适配、26 技能、汉化和来源合同。
 - 不使用运行时反射；私有来源状态只允许 scoped Mixin accessor/invoker并必须有合同测试。
 - 服务端拥有业务结果，客户端只投影视觉。
 - OpenSpec 文档使用中文，保留验证所需的 `Requirement` 与 `Scenario` 结构词。

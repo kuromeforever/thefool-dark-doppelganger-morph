@@ -5,6 +5,9 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "thefool_dark_doppelganger_morph.refmap.json",
   "mixins": [
+    "accessor.DarkDoppelgangerPresentationAccess",
+    "accessor.DarkDoppelgangerCastPoseAccess",
+    "compat.DarkDoppelgangerNativeCompletionMixin",
     "accessor.SummonDoppelMinionSpellInvoker",
     "compat.DarkDoppelgangerEntityLocalizationMixin",
     "compat.DarkDoppelgangerMinionLocalizationMixin",
@@ -14,6 +17,9 @@
     "compat.SummonScrollLocalizationMixin"
   ],
   "client": [
+    "client.DarkDoppelgangerPreviewMixin",
+    "client.DarkDoppelgangerAnimationClockMixin",
+    "client.DarkDoppelgangerTravelAnimationMixin",
     "client.DarkDoppelgangerBossBarMixin"
   ],
   "injectors": {

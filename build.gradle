@@ -52,6 +52,11 @@ repositories {
 }
 
 configurations {
+    fidelityContract {
+        canBeConsumed = false
+        canBeResolved = true
+        transitive = false
+    }
     darkDoppelgangerContract {
         canBeConsumed = false
         canBeResolved = true
@@ -65,11 +70,14 @@ dependencies {
     implementation fg.deobf("blank:darkdoppelganger:${dark_doppelganger_version}")
     implementation fg.deobf("blank:irons_spellbooks-1.20.1:${irons_spellbooks_version}")
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.20.1:${geckolib_version}")
-    compileOnly files("${aomProjectDir}/build/classes/java/main")
-    compileOnly fg.deobf('blank:bettermorph:0.0.57-1.20.1-forge')
+    compileOnly files(findProperty('aom_classes_dir') ?: "${aomProjectDir}/build/classes/java/main")
+    compileOnly fg.deobf('blank:bettermorph:0.0.60-1.20.1-forge')
     compileOnly fg.deobf('blank:architectury-1.20.1-forge:9.2.14')
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     darkDoppelgangerContract "blank:darkdoppelganger:${dark_doppelganger_version}"
+    fidelityContract "blank:irons_spellbooks-1.20.1:${irons_spellbooks_version}"
+    fidelityContract 'blank:traveloptics:6.3.0-1.20.1'
+    fidelityContract 'blank:geckolib-forge-1.20.1:4.8.4'
 
     testImplementation platform('org.junit:junit-bom:5.10.2')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -109,10 +117,16 @@ tasks.named('processResources', ProcessResources).configure {
 tasks.named('test', Test).configure {
     useJUnitPlatform()
     dependsOn configurations.darkDoppelgangerContract
+    dependsOn configurations.fidelityContract
     dependsOn 'reobfJar'
     systemProperty 'thefool.darkdoppelganger.contract.jar', configurations.darkDoppelgangerContract.singleFile.absolutePath
     systemProperty 'thefool.darkdoppelganger.adapter.jar', tasks.named('jar', Jar).get().archiveFile.get().asFile.absolutePath
     systemProperty 'thefool.darkdoppelganger.project.root', projectDir.absolutePath
+    configurations.fidelityContract.files.each { artifact ->
+        def key = artifact.name.startsWith('irons_spellbooks') ? 'iron' :
+                artifact.name.startsWith('traveloptics') ? 'travel' : 'gecko'
+        systemProperty "thefool.${key}.contract.jar", artifact.absolutePath
+    }
 }
 
 tasks.named('jar', Jar).configure {
@@ -143,6 +157,8 @@ tasks.register('verifyThinJar') {
                 'io/redspace/ironsspellbooks/',
                 'software/bernie/geckolib/',
                 'net/bandit/darkdoppelganger/',
+                'com/gametechbc/traveloptics/',
+                'assets/traveloptics/',
                 'dev/architectury/'
         ]
         def approvedSourceResources = [

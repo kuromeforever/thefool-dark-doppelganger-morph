@@ -1,13 +1,14 @@
 # 源码索引
 
-最后更新：2026-08-28
+最后更新：2026-09-08。
 
-本仓 Java 包根为 `io.github.kuromeforever.thefooldarkdoppelgangermorph`。来源事实优先级为精确 Dark Doppelganger Jar字节码/资源，其次为 AOM Morph API源码与既有适配模式；公开介绍不能覆盖精确 Jar。
+事实优先级为当前 Jar 字节码/资源，其次实际 AOM/BetterMorph 源码。旧本地 Dark Doppelganger 8.3.1 源码不能代替 9.8.2。
 
-外部权威：
+- Dark Doppelganger 9.8.2：Boss/仆从、法术、出生状态和动画。
+- AOM 0.3.1 本轮构建：Morph API、Ability、BaseIdentity、NativeSession。
+- BetterMorph 0.0.60 编译验证：EntityUpdater 和 identity 同步，运行范围沿用元数据。
+- Iron 3.15.6：正式 AbstractSpell Registry、原生开始/持续/完成/中断。
+- Travel 6.3.0-1.20.1：三项来源法术、五条 humanoid 动画。
+- GeckoLib 4.8.4：控制器时钟、初始骨骼快照和只读 baked animation。
 
-- Dark Doppelganger `9.8.2-1.20.1`：实体、法术、动画、literal和来源配置。
-- AOM `0.3.1`：Morph API v1.1、Ability、BaseIdentity、MorphSpellCastCoordinator和公共生命周期。
-- BetterMorph `0.0.57`（运行范围 `[0.0.54,)`）：玩家 identity 渲染、标准字段同步与唯一冷却。
-- Iron's Spellbooks `3.15.6`：原生施法会话与 `shadow_slash`。
-- GeckoLib `4.8.4`：来源 `playAnimation` 视觉投影。
+哈希、节点与省略项统一见 [来源审计入口](../来源行为与技能适配审计.md)。

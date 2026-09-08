@@ -43,26 +43,31 @@ public final class DarkDoppelgangerMorphRegistration {
     }
 
     private static void register(MorphSkillRegistrar registrar) {
-        registrar.entity(BOSS_ID, EntityRegistry.DARK_DOPPELGANGER::get)
+        var boss = registrar.entity(BOSS_ID, EntityRegistry.DARK_DOPPELGANGER::get)
                 .ability(skill("mirror_blade_combo"), DarkDoppelgangerAbilities::mirrorBladeCombo)
                 .ability(skill("shadow_slash"), DarkDoppelgangerAbilities::shadowSlash)
                 .ability(skill("doppel_portal"), DarkDoppelgangerAbilities::doppelPortal)
                 .ability(skill("summon_doppel_minion"), DarkDoppelgangerAbilities::summonDoppelMinion)
                 .ability(skill("life_drain"), DarkDoppelgangerAbilities::lifeDrain)
                 .identity(DarkDoppelgangerIdentity::new);
+        for (var spell : DarkDoppelgangerSpellCatalog.ADDITIONS) {
+            boss.ability(skill(spell.key()), () -> DarkDoppelgangerAbilities.additionalSpell(spell));
+        }
         registrar.entity(MINION_ID, EntityRegistry.DARK_DOPPELGANGER_MINION::get)
                 .technicalIdentity();
     }
 
     private static Map<ResourceLocation, List<ResourceLocation>> activeSkills() {
         Map<ResourceLocation, List<ResourceLocation>> skills = new LinkedHashMap<>();
-        skills.put(BOSS_ID, List.of(
+        var entries = new java.util.ArrayList<ResourceLocation>(List.of(
                 skill("mirror_blade_combo"),
                 skill("shadow_slash"),
                 skill("doppel_portal"),
                 skill("summon_doppel_minion"),
                 skill("life_drain")
         ));
+        DarkDoppelgangerSpellCatalog.ADDITIONS.forEach(entry -> entries.add(skill(entry.key())));
+        skills.put(BOSS_ID, List.copyOf(entries));
         return Collections.unmodifiableMap(skills);
     }
 

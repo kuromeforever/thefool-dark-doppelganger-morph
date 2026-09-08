@@ -1,14 +1,15 @@
 # QA 命令
 
-最后更新：2026-08-28
+最后更新：2026-09-08。
+
+AOM 对应构建先提供已编译 mapped classes。本仓只读消费，不触发根构建。
 
 ```powershell
-..\thefool-forge-1.20.1\gradlew.bat -p ..\thefool-forge-1.20.1 --no-daemon compileJava
-.\gradlew.bat --no-daemon clean test build
-openspec validate add-dark-doppelganger-localization-and-morph-skills --strict
+.\gradlew.bat --no-daemon '-Paom_classes_dir=D:/develop/project-mc/TheFool/.codex-build/morph-variants-0908/aom/build/classes/java/main' test build
+openspec validate complete-doppelganger-morph-fidelity --strict
 git diff --check
 ```
 
-`build` 必须包含 reobf 与 `verifyThinJar`。正式发布还需重建 AOM all Jar，用 AOM `tools/deployment/SafeModJarDeployment.psm1` 先执行 `-WhatIf` 再同步 PCL，并核对 build/PCL SHA-256、唯一 mod id和必需条目。
+常规父仓已完成 compileJava 时可省略 aom_classes_dir。输出 build/libs/thefool_dark_doppelganger_morph-0.1.4.jar，XML 为 build/test-results/test/TEST-*.xml。build 必须含 reobf、verifyThinJar。
 
-真实客户端、两人、Dedicated Server与不重置存档测试见 `docs/实机验收清单.md`，不能由自动测试替代。
+每轮确认自己的 Gradle/Java 退出，不停止用户或其他任务进程。两仓正式发布由主任务统一完成 AOM all、安全同步、哈希和 mod id 核对。本轮附属代理未部署。真实验收见 docs/实机验收清单.md。

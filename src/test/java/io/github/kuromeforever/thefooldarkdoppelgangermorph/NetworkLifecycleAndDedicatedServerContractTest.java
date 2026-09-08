@@ -37,10 +37,10 @@ class NetworkLifecycleAndDedicatedServerContractTest {
         String sessions = ContractTestSupport.source(
                 "src/main/java/io/github/kuromeforever/thefooldarkdoppelgangermorph/network/DarkDoppelgangerActionSessions.java"
         );
-        assertTrue(sessions.contains("MAX_ACTION_DURATION_TICKS = 60"));
+        assertTrue(sessions.contains("MAX_ACTION_DURATION_TICKS = 6000"));
         assertTrue(sessions.contains("stop(player);"));
         assertTrue(sessions.contains("syncToTracking"));
-        assertTrue(sessions.contains("remaining > 0"));
+        assertTrue(sessions.contains("valid(player, active)"));
         assertEquals(0, count(sessions.substring(sessions.indexOf("public static void tick")), "true, bounded"));
     }
 
@@ -49,10 +49,25 @@ class NetworkLifecycleAndDedicatedServerContractTest {
         String client = ContractTestSupport.source(
                 "src/main/java/io/github/kuromeforever/thefooldarkdoppelgangermorph/client/DarkDoppelgangerClientActions.java"
         );
-        assertTrue(client.contains("Math.min(60, Math.max(1, message.durationTicks()))"));
-        assertTrue(client.contains("current.castId().equals(message.castId())"));
+        assertTrue(client.contains("ActionPhaseClock.acceptsStart"));
+        assertTrue(client.contains("ActionPhaseClock.acceptsStop(current.message.castId(), message.castId())"));
         assertTrue(client.contains("PlayerIdentity.getIdentity(player)"));
-        assertTrue(client.contains("doppelganger.playAnimation(animation)"));
+        assertTrue(client.contains("access.doppel$setQueuedAnimation"));
+        String binding = client.substring(client.indexOf("public static void applyPending"),
+                client.indexOf("private static RawAnimation animation"));
+        assertTrue(binding.indexOf("phaseActive(action, player.level())")
+                < binding.indexOf("if (action.carrier == identity) return;"));
+        assertTrue(binding.indexOf("ActionPhaseClock.carrierMatches")
+                < binding.indexOf("if (action.carrier == identity) return;"));
+        String callback = client.substring(client.indexOf("public static void identityChanging"),
+                client.indexOf("private static boolean phaseActive"));
+        assertFalse(callback.contains("getUUID().equals(action.message.carrierId())"));
+        assertTrue(callback.contains("releaseBeforeIdentityNbt"));
+        String clock = client.substring(client.indexOf("public static double animationTick"),
+                client.indexOf("public static void tick()"));
+        assertTrue(clock.contains("phaseActive(action, level)"));
+        assertTrue(clock.contains("ActionPhaseClock.carrierMatches"));
+        assertTrue(clock.contains("action.message.carrierId(), action.carrier.getUUID()"));
         for (String forbidden : Set.of(".hurt(", ".heal(", "setCooldown", "sendToServer", "addFreshEntity")) {
             assertFalse(client.contains(forbidden), forbidden);
         }
@@ -69,7 +84,7 @@ class NetworkLifecycleAndDedicatedServerContractTest {
         )) {
             assertTrue(lifecycle.contains(hook), hook);
         }
-        assertTrue(lifecycle.contains("MorphSpellCastCoordinator.cancel(serverPlayer)"));
+        assertTrue(lifecycle.contains("DarkDoppelgangerSpellSessions.clear(serverPlayer)"));
         assertTrue(lifecycle.contains("DarkDoppelgangerActionSessions.clearAll()"));
         assertTrue(lifecycle.contains("BladeComboService.clearAll()"));
     }
@@ -81,8 +96,8 @@ class NetworkLifecycleAndDedicatedServerContractTest {
         )).getAsJsonObject();
         JsonArray common = config.getAsJsonArray("mixins");
         JsonArray client = config.getAsJsonArray("client");
-        assertEquals(7, common.size());
-        assertEquals(1, client.size());
+        assertEquals(10, common.size());
+        assertEquals(4, client.size());
         assertTrue(client.toString().contains("client.DarkDoppelgangerBossBarMixin"));
         assertFalse(common.toString().contains("client."));
 

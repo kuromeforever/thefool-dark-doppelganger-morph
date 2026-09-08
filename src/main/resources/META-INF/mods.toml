@@ -58,3 +58,10 @@ mandatory=true
 versionRange="${geckolib_version_range}"
 ordering="AFTER"
 side="BOTH"
+
+[[dependencies."${mod_id}"]]
+modId="traveloptics"
+mandatory=true
+versionRange="[6.3.0-1.20.1,)"
+ordering="AFTER"
+side="BOTH"

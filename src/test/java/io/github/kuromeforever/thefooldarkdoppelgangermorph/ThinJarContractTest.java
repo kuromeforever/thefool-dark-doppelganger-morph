@@ -20,6 +20,8 @@ class ThinJarContractTest {
                 "io/redspace/ironsspellbooks/",
                 "software/bernie/geckolib/",
                 "net/bandit/darkdoppelganger/",
+                "com/gametechbc/traveloptics/",
+                "assets/traveloptics/",
                 "dev/architectury/"
         );
         Set<String> approvedSourceResources = Set.of(
@@ -52,9 +54,11 @@ class ThinJarContractTest {
                     zip.getInputStream(zip.getEntry("META-INF/mods.toml")).readAllBytes(),
                     StandardCharsets.UTF_8
             );
-            assertTrue(metadata.contains("version=\"0.1.3\""));
+            assertTrue(metadata.contains("version=\"0.1.4\""));
             assertTrue(metadata.contains("modId=\"bettermorph\""));
             assertTrue(metadata.contains("versionRange=\"[0.0.54,)\""));
+            assertTrue(metadata.contains("modId=\"traveloptics\""));
+            assertTrue(metadata.contains("versionRange=\"[6.3.0-1.20.1,)\""));
             assertTrue(entries.contains("thefool_dark_doppelganger_morph.mixins.json"));
             assertTrue(entries.stream().anyMatch(name -> name.startsWith(
                     "io/github/kuromeforever/thefooldarkdoppelgangermorph/"

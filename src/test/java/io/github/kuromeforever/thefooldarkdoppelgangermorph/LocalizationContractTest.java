@@ -49,7 +49,7 @@ class LocalizationContractTest {
                 "src/main/resources/assets/thefool_dark_doppelganger_morph/lang/zh_cn.json"
         );
         assertEquals(english.keySet(), chinese.keySet());
-        assertEquals(31, english.size());
+        assertEquals(74, english.size());
         for (String skill : Set.of(
                 "mirror_blade_combo", "shadow_slash", "doppel_portal",
                 "summon_doppel_minion", "life_drain"
