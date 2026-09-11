@@ -1,5 +1,7 @@
 # 当前上下文
 
+本次依赖修正的test build、OpenSpec与薄Jar核验通过，已与AOM0.3.0联合部署至PCL并确认构建/目标哈希一致，正式main已提交推送，实机玩法验收仍独立保留。
+
 2026-09-11：按用户要求对齐当前正式AOM0.3.0，依赖范围改为[0.3.0,0.4.0)，API保持当前Morph API v1.1，附属自身版本和玩法不变。验证与联合发布记录见AOM的`openspec/changes/complete-tower-temperance-secrets/implementation-audit.md`。
 
 最后更新：2026-09-08。

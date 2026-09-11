@@ -7,7 +7,7 @@
 ## 冻结边界
 
 - 本仓库是独立 BOTH 薄附属；依赖方向为附属 -> Dark Doppelganger / AOM / BetterMorph，AOM 不反向依赖本附属。
-- 目标为 Forge `47.4.12`、Dark Doppelganger `9.8.2-1.20.1`、AOM `0.3.0` 本轮 NativeSession API、BetterMorph 编译版本 `0.0.60`、运行范围 `[0.0.54,)`、Iron `3.15.6`、GeckoLib `4.8.4`、Travel `6.3.0-1.20.1`。依赖范围以元数据为准。
+- 目标为 Forge `47.4.12`、Dark Doppelganger `9.8.2-1.20.1`、AOM `0.3.0` 本轮 NativeSession API、BetterMorph 编译版本 `0.0.63`、运行范围 `[0.0.54,)`、Iron `3.15.6`、GeckoLib `4.8.4`、Travel `6.3.0-1.20.1`。依赖范围以元数据为准。
 - 通过 AOM Morph API v1.1 注册一个可玩 Boss、一个技术仆从和 26 主动，只设置 60 tick AOM/BetterMorph 输入冷却，不截断来源读条/效果/复施生命期。
 - 长篇来源和架构事实以 AOM docs/thefool/thefool_dark_doppelganger_morph/ 下的权威文档为准，子仓仅维护入口、代码、测试和局部 OpenSpec。
 - 禁止运行时反射。私有来源状态只能使用 scoped Mixin accessor/invoker并由精确字节码合同锁定。
