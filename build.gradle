@@ -71,7 +71,7 @@ dependencies {
     implementation fg.deobf("blank:irons_spellbooks-1.20.1:${irons_spellbooks_version}")
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.20.1:${geckolib_version}")
     compileOnly files(findProperty('aom_classes_dir') ?: "${aomProjectDir}/build/classes/java/main")
-    compileOnly fg.deobf('blank:bettermorph:0.0.60-1.20.1-forge')
+    compileOnly fg.deobf('blank:bettermorph:0.0.63-1.20.1-forge')
     compileOnly fg.deobf('blank:architectury-1.20.1-forge:9.2.14')
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     darkDoppelgangerContract "blank:darkdoppelganger:${dark_doppelganger_version}"

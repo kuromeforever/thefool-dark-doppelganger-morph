@@ -1,0 +1,3 @@
+- [x] 修改依赖范围并对齐合同
+- [x] test build与OpenSpec严格校验
+- [ ] 联合AOM发布、提交和推送
