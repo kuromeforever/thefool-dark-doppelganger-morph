@@ -74,4 +74,29 @@ class ThinJarContractTest {
             ));
         }
     }
+
+    @Test
+    void releaseJarContainsProductionLocalizationMappings() throws Exception {
+        try (ZipFile zip = new ZipFile(ContractTestSupport.adapterJar().toFile())) {
+            var entry = zip.getEntry("thefool_dark_doppelganger_morph.refmap.json");
+            org.junit.jupiter.api.Assertions.assertNotNull(entry,
+                    "发布 Jar 必须携带 refmap，源码调用合同不能证明生产注入可用");
+            var refmap = com.google.gson.JsonParser.parseString(new String(
+                    zip.getInputStream(entry).readAllBytes(), StandardCharsets.UTF_8)).getAsJsonObject();
+            String named = "Lnet/minecraft/network/chat/Component;literal(Ljava/lang/String;)Lnet/minecraft/network/chat/MutableComponent;";
+            String runtime = "Lnet/minecraft/network/chat/Component;m_237113_(Ljava/lang/String;)Lnet/minecraft/network/chat/MutableComponent;";
+            for (String name : List.of("DarkDoppelgangerCommandLocalizationMixin",
+                    "SummonDoppelgangerLocalizationMixin",
+                    "SummonDoppelMinionSpellLocalizationMixin",
+                    "DarkDoppelgangerEntityLocalizationMixin",
+                    "DarkDoppelgangerMinionLocalizationMixin")) {
+                String key = "io/github/kuromeforever/thefooldarkdoppelgangermorph/mixin/compat/" + name;
+                for (var mappings : List.of(refmap.getAsJsonObject("mappings"),
+                        refmap.getAsJsonObject("data").getAsJsonObject("searge"))) {
+                    org.junit.jupiter.api.Assertions.assertNotNull(mappings.get(key), key);
+                    assertEquals(runtime, mappings.getAsJsonObject(key).get(named).getAsString(), key);
+                }
+            }
+        }
+    }
 }

@@ -90,6 +90,51 @@ mixin {
     config 'thefool_dark_doppelganger_morph.mixins.json'
 }
 
+
+// Mixin 0.8.5 generates one aggregate refmap. Gradle's incremental compile can
+// remove this untracked temporary output without rerunning all Mixin processors.
+// Compile this small adapter as a whole and track both processor output names.
+def mixinRefmapName = 'thefool_dark_doppelganger_morph.refmap.json'
+def mixinRefmapFile = layout.buildDirectory.file("tmp/compileJava/${mixinRefmapName}")
+def mixinCompileRefmapFile = layout.buildDirectory.file('tmp/compileJava/compileJava-refmap.json')
+tasks.named('compileJava', JavaCompile).configure {
+    options.incremental = false
+    outputs.file(mixinRefmapFile)
+    outputs.file(mixinCompileRefmapFile)
+}
+tasks.register('verifyMixinRefmap') {
+    dependsOn 'compileJava'
+    inputs.files(mixinRefmapFile, mixinCompileRefmapFile)
+    doLast {
+        def refmap = mixinRefmapFile.get().asFile
+        def processorOutput = mixinCompileRefmapFile.get().asFile
+        if (!refmap.isFile() && processorOutput.isFile()) {
+            refmap.parentFile.mkdirs()
+            refmap.bytes = processorOutput.bytes
+        }
+        if (!refmap.isFile()) {
+            throw new GradleException("Missing ${mixinRefmapName}; cannot publish adapter.")
+        }
+        def parsed = new groovy.json.JsonSlurper().parse(refmap)
+        if (!parsed.mappings || !parsed.data?.searge) {
+            throw new GradleException("${mixinRefmapName} has no production mappings.")
+        }
+    }
+}
+tasks.named('jar', Jar).configure {
+    dependsOn 'verifyMixinRefmap'
+    doLast {
+        def zip = new java.util.zip.ZipFile(archiveFile.get().asFile)
+        try {
+            if (zip.getEntry(mixinRefmapName) == null) {
+                throw new GradleException("Published Jar is missing ${mixinRefmapName}.")
+            }
+        } finally {
+            zip.close()
+        }
+    }
+}
+
 tasks.named('processResources', ProcessResources).configure {
     filteringCharset = 'UTF-8'
     def replaceProperties = [
