@@ -51,6 +51,7 @@ public final class DarkDoppelgangerPresentation {
     public static void clear() { OWNERS.clear(); PREVIEWS.clear(); }
 
     private static void prepare(DarkDoppelgangerEntity identity) {
+        DarkDoppelgangerClientActions.suppressPose(identity);
         DarkDoppelgangerPresentationAccess state = (DarkDoppelgangerPresentationAccess) identity;
         if (state.doppel$getPresentationAge() > 45) return;
         state.doppel$setPresentationAge(46);

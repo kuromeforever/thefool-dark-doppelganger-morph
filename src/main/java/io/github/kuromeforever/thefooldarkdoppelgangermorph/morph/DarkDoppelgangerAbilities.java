@@ -6,7 +6,6 @@ import com.kurome.ageofmythology.model.Ability;
 import com.kurome.ageofmythology.model.MorphData;
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.TheFoolDarkDoppelgangerMorph;
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.mixin.accessor.SummonDoppelMinionSpellInvoker;
-import io.github.kuromeforever.thefooldarkdoppelgangermorph.network.DarkDoppelgangerAction;
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.network.DarkDoppelgangerActionSessions;
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.runtime.BladeComboService;
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.runtime.DarkDoppelgangerSpellSessions;
@@ -101,11 +100,6 @@ public final class DarkDoppelgangerAbilities {
                             || !(player instanceof ServerPlayer serverPlayer)
                             || !(identity instanceof DarkDoppelgangerEntity)) {
                         return;
-                    }
-                    if (executor.getAge() == 1) {
-                        DarkDoppelgangerActionSessions.start(
-                                serverPlayer, DarkDoppelgangerAction.LIFE_DRAIN, LIFE_DRAIN_DURATION_TICKS
-                        );
                     }
                     if (executor.getAge() == LIFE_DRAIN_HIT_TICK) {
                         drain(serverLevel, serverPlayer);

@@ -49,25 +49,9 @@ class NetworkLifecycleAndDedicatedServerContractTest {
         String client = ContractTestSupport.source(
                 "src/main/java/io/github/kuromeforever/thefooldarkdoppelgangermorph/client/DarkDoppelgangerClientActions.java"
         );
-        assertTrue(client.contains("ActionPhaseClock.acceptsStart"));
-        assertTrue(client.contains("ActionPhaseClock.acceptsStop(current.message.castId(), message.castId())"));
-        assertTrue(client.contains("PlayerIdentity.getIdentity(player)"));
-        assertTrue(client.contains("access.doppel$setQueuedAnimation"));
-        String binding = client.substring(client.indexOf("public static void applyPending"),
-                client.indexOf("private static RawAnimation animation"));
-        assertTrue(binding.indexOf("phaseActive(action, player.level())")
-                < binding.indexOf("if (action.carrier == identity) return;"));
-        assertTrue(binding.indexOf("ActionPhaseClock.carrierMatches")
-                < binding.indexOf("if (action.carrier == identity) return;"));
-        String callback = client.substring(client.indexOf("public static void identityChanging"),
-                client.indexOf("private static boolean phaseActive"));
-        assertFalse(callback.contains("getUUID().equals(action.message.carrierId())"));
-        assertTrue(callback.contains("releaseBeforeIdentityNbt"));
-        String clock = client.substring(client.indexOf("public static double animationTick"),
-                client.indexOf("public static void tick()"));
-        assertTrue(clock.contains("phaseActive(action, level)"));
-        assertTrue(clock.contains("ActionPhaseClock.carrierMatches"));
-        assertTrue(clock.contains("action.message.carrierId(), action.carrier.getUUID()"));
+        assertTrue(client.contains("DarkDoppelgangerPresentation.isProjection(identity)"));
+        assertTrue(client.contains("access.doppel$setQueuedAnimation(null)"));
+        assertTrue(client.contains("doppel$setAnimatingLegs(false)"));
         for (String forbidden : Set.of(".hurt(", ".heal(", "setCooldown", "sendToServer", "addFreshEntity")) {
             assertFalse(client.contains(forbidden), forbidden);
         }
@@ -97,7 +81,7 @@ class NetworkLifecycleAndDedicatedServerContractTest {
         JsonArray common = config.getAsJsonArray("mixins");
         JsonArray client = config.getAsJsonArray("client");
         assertEquals(10, common.size());
-        assertEquals(4, client.size());
+        assertEquals(6, client.size());
         assertTrue(client.toString().contains("client.DarkDoppelgangerBossBarMixin"));
         assertFalse(common.toString().contains("client."));
 

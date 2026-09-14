@@ -30,7 +30,6 @@ public final class BladeComboService {
             second = FORMS[(first.ordinal() + offset) % FORMS.length];
         }
         SESSIONS.put(player.getUUID(), new Session(frozenTarget.getUUID(), first, second));
-        DarkDoppelgangerActionSessions.start(player, first.actionId(), first.durationTicks());
         return true;
     }
 
@@ -46,11 +45,6 @@ public final class BladeComboService {
             return;
         }
         int secondStart = session.first().durationTicks() + 1;
-        if (age == secondStart) {
-            DarkDoppelgangerActionSessions.start(
-                    player, session.second().actionId(), session.second().durationTicks()
-            );
-        }
         if (age == secondStart + session.second().hitTick() - 1) {
             hit(player, session.targetId(), 8.0F);
         }

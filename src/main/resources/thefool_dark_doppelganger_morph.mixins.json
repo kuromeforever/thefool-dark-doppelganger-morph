@@ -20,7 +20,9 @@
     "client.DarkDoppelgangerPreviewMixin",
     "client.DarkDoppelgangerAnimationClockMixin",
     "client.DarkDoppelgangerTravelAnimationMixin",
-    "client.DarkDoppelgangerBossBarMixin"
+    "client.DarkDoppelgangerBossBarMixin",
+    "client.DarkDoppelgangerNoCastAnimationMixin",
+    "client.DarkDoppelgangerNoIronCastAnimationMixin"
   ],
   "injectors": {
     "defaultRequire": 1
