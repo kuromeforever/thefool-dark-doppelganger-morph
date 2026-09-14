@@ -81,6 +81,7 @@ public final class DarkDoppelgangerClientActions {
         }
         action.controller = access.doppel$getActionController();
         action.speed = speed(action.message);
+        action.controller.forceAnimationReset();
         action.controller.setAnimationSpeed(action.speed);
         access.doppel$setQueuedAnimation(raw == null ? RawAnimation.begin().thenPlay("blank") : raw);
         if (raw != null) CONTROLLERS.put(action.controller, action);
@@ -157,9 +158,13 @@ public final class DarkDoppelgangerClientActions {
     private static void stop(ClientAction action) {
         if (action.controller != null) CONTROLLERS.remove(action.controller);
         if (action.carrier != null) {
-            ((DarkDoppelgangerPresentationAccess) action.carrier).doppel$setQueuedAnimation(RawAnimation.begin().thenPlay("blank"));
+            ((DarkDoppelgangerPresentationAccess) action.carrier).doppel$setQueuedAnimation(null);
             ((DarkDoppelgangerCastPoseAccess) action.carrier).doppel$setAnimatingLegs(action.previousAnimatingLegs);
-            if (action.controller != null) action.controller.setAnimationSpeed(1);
+            if (action.controller != null) {
+                action.controller.stop();
+                action.controller.forceAnimationReset();
+                action.controller.setAnimationSpeed(1);
+            }
         }
         action.carrier = null; action.controller = null;
     }

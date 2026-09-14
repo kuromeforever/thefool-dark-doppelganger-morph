@@ -15,3 +15,6 @@
 
 
 2026-09-14 来源动作反馈及编译依赖对齐见 `docs/ai/handoffs/2026-09-14-creature-feedback.md`；长篇事实归 AOM 对应权威审计。
+
+
+2026-09-15：结束段按来源实际动画长度计算，控制器结束与取消时清空排队动作并复位；未知长度有界回退，结束段最长六秒。 本轮证据入口：`docs/ai/handoffs/2026-09-15-creature-runtime-feedback.md`。

@@ -59,8 +59,12 @@ public final class DarkDoppelgangerSpellSessions {
                 && receipt.player.isAlive() && receipt.player.level() == receipt.carrier.level()) {
             // PASS means there is no finish clip; the completed channel must stay stopped.
             if (!receipt.spell.getCastFinishAnimation().isPass) {
-                DarkDoppelgangerActionSessions.startAt(receipt.player, receipt.spell.getSpellResource(),
-                        120, true, receipt.duration, receipt.player.level().getGameTime());
+                var finish = receipt.spell.getCastFinishAnimation().getForMob().orElseGet(() ->
+                        receipt.spell.getCastType() == CastType.INSTANT
+                                ? receipt.spell.getCastStartAnimation().getForMob().orElse(null) : null);
+                int finishTicks = DoppelAnimationLengths.finishTicks(finish);
+                if (finishTicks > 0) DarkDoppelgangerActionSessions.startAt(receipt.player, receipt.spell.getSpellResource(),
+                        finishTicks, true, receipt.duration, receipt.player.level().getGameTime());
             }
         }
     }
