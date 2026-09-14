@@ -57,11 +57,11 @@ public final class DarkDoppelgangerSpellSessions {
         if (receipt.visual != null) DarkDoppelgangerActionSessions.stop(receipt.player, receipt.visual);
         if (!interrupted && PlayerIdentity.getIdentity(receipt.player) == receipt.carrier
                 && receipt.player.isAlive() && receipt.player.level() == receipt.carrier.level()) {
-            boolean keepStart = receipt.spell.getCastType() != CastType.INSTANT
-                    && receipt.spell.getCastFinishAnimation().isPass;
-            DarkDoppelgangerActionSessions.startAt(receipt.player, receipt.spell.getSpellResource(),
-                    keepStart ? receipt.duration + 120 : 120, !keepStart, receipt.duration,
-                    keepStart ? receipt.startedAt : receipt.player.level().getGameTime());
+            // PASS means there is no finish clip; the completed channel must stay stopped.
+            if (!receipt.spell.getCastFinishAnimation().isPass) {
+                DarkDoppelgangerActionSessions.startAt(receipt.player, receipt.spell.getSpellResource(),
+                        120, true, receipt.duration, receipt.player.level().getGameTime());
+            }
         }
     }
     public static void observeForeignStart(ServerPlayer player) {

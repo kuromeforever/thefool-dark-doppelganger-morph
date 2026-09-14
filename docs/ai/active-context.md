@@ -13,3 +13,12 @@
 只读消费父任务编译的 AOM classes，未在本仓触发 AOM build。最终两仓提交、AOM all 构建和 PCL 同步由主任务负责。本附属实施代理未部署、未启动客户端/专服、未改存档。
 
 长篇事实和逐来源节点见 `docs/来源行为与技能适配审计.md` 指向的 AOM 权威文档。真实客户端、多人、同场 Boss 和旧存档生命周期仍待验收。
+
+
+## 2026-09-14 生物反馈确认项
+
+吟唱结束 PASS 直接停止，不重播起手；26 技能和 60 Tick 冷却不改。
+
+本轮验证、AOM 联合构建和 PCL 同步证据统一见 AOM `openspec/changes/repair-confirmed-creature-feedback-20260914/verification.md`，人工客户端/多人/Dedicated Server 仍单列待验收。
+
+构建依赖已从不存在于当前 AOM libs-core 的 BetterMorph 0.0.63 对齐至已发布的 0.0.64；仅 compileOnly 版本变更，运行范围和附属版本不变。

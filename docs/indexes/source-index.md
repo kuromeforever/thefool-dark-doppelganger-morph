@@ -12,3 +12,6 @@
 - GeckoLib 4.8.4：控制器时钟、初始骨骼快照和只读 baked animation。
 
 哈希、节点与省略项统一见 [来源审计入口](../来源行为与技能适配审计.md)。
+
+
+2026-09-14 来源动作反馈及编译依赖对齐见 `docs/ai/handoffs/2026-09-14-creature-feedback.md`；长篇事实归 AOM 对应权威审计。
