@@ -11,7 +11,7 @@ import io.github.kuromeforever.thefooldarkdoppelgangermorph.runtime.BladeComboSe
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.runtime.DarkDoppelgangerSpellSessions;
 import io.github.kuromeforever.thefooldarkdoppelgangermorph.runtime.DarkDoppelgangerCombat;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
-import liushuangwuyin.bettermorph.api.PlayerIdentity;
+import com.kurome.ageofmythology.bettermorph.impl.common.MorphAbilityExecutionContext;
 import net.bandit.darkdoppelganger.entity.DarkDoppelgangerEntity;
 import net.bandit.darkdoppelganger.registry.ItemRegistry;
 import net.bandit.darkdoppelganger.registry.ModSounds;
@@ -231,7 +231,7 @@ public final class DarkDoppelgangerAbilities {
     }
 
     private static boolean isIdentity(Player player) {
-        return player != null && PlayerIdentity.getIdentity(player) instanceof DarkDoppelgangerEntity;
+        return player != null && MorphAbilityExecutionContext.identity(player) instanceof DarkDoppelgangerEntity;
     }
 
     private static MorphData data(String key, Item icon) {

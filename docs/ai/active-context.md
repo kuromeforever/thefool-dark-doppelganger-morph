@@ -1,5 +1,9 @@
 # 当前上下文
 
+## 2026-09-18 多人反馈修复
+
+0.1.5实施灵魂来源前置与原生会话上下文，状态见[本轮交接](handoffs/2026-09-18-multiplayer-feedback.md)。
+
 2026-09-15 最新：用户要求全部主动无动作投影，取代下文历史来源动作对齐要求；NativeSession/26主动/时长/CD保留。见[本轮交接](handoffs/2026-09-15-no-cast-projection.md)。
 
 本次依赖修正的test build、OpenSpec与薄Jar核验通过，已与AOM0.3.0联合部署至PCL并确认构建/目标哈希一致，正式main已提交推送，实机玩法验收仍独立保留。

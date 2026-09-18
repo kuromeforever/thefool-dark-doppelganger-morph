@@ -54,7 +54,7 @@ class ThinJarContractTest {
                     zip.getInputStream(zip.getEntry("META-INF/mods.toml")).readAllBytes(),
                     StandardCharsets.UTF_8
             );
-            assertTrue(metadata.contains("version=\"0.1.4\""));
+            assertTrue(metadata.contains("version=\"0.1.5\""));
             assertTrue(metadata.contains("versionRange=\"[0.3.0,0.4.0)\""));
             assertTrue(metadata.contains("modId=\"bettermorph\""));
             assertTrue(metadata.contains("versionRange=\"[0.0.54,)\""));
